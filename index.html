@@ -6,80 +6,40 @@
     <title>Stock Manager Ultimate Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&family=Inter:wght@400;600&display=swap');
-
-        :root {
-            --primary: #6c5ce7; --bg: #f0f2f5; --card: #ffffff;
-            --text: #1a1a1a; --sub-text: #636e72; --nav: #ffffff;
-            --success: #00b894; --danger: #d63031; --input-bg: #f8f9fa;
-        }
-
-        [data-theme="dark"] {
-            --bg: #0f172a; --card: #1e293b; --text: #f8fafc;
-            --sub-text: #94a3b8; --nav: #1e293b; --input-bg: rgba(255,255,255,0.05);
-        }
-
+        :root { --primary: #6c5ce7; --bg: #f0f2f5; --card: #ffffff; --text: #1a1a1a; --sub-text: #636e72; --nav: #ffffff; --success: #00b894; --danger: #d63031; --input-bg: #f8f9fa; }
+        [data-theme="dark"] { --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --sub-text: #94a3b8; --nav: #1e293b; --input-bg: rgba(255,255,255,0.05); }
         * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         input, textarea { -webkit-user-select: text; user-select: text; }
-
-        body { 
-            font-family: 'Inter', 'Pyidaungsu', sans-serif; 
-            background: var(--bg); color: var(--text); 
-            margin: 0; transition: 0.4s; overflow-x: hidden;
-        }
-
-        /* Login Screen */
-        .login-screen {
-            position: fixed; inset: 0; background: var(--primary);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 5000; color: white; text-align: center; padding: 20px;
-        }
-        .google-btn {
-            background: white; color: #444; padding: 14px 24px; border-radius: 30px; border: none;
-            font-weight: bold; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-top: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Header & Content */
-        .header {
-            background: var(--card); padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
+        body { font-family: 'Inter', 'Pyidaungsu', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: 0.4s; overflow-x: hidden; }
+        .login-screen { position: fixed; inset: 0; background: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5000; color: white; text-align: center; padding: 20px; }
+        .google-btn { background: white; color: #444; padding: 14px 24px; border-radius: 30px; border: none; font-weight: bold; display: flex; align-items: center; gap: 12px; cursor: pointer; margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .header { background: var(--card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .shop-info { display: flex; align-items: center; gap: 12px; }
         .logo-box { width: 42px; height: 42px; border-radius: 12px; border: 2px solid var(--primary); overflow: hidden; background: #eee; }
         #shopLogoDisplay { width: 100%; height: 100%; object-fit: cover; }
-
         .search-area { display: none; padding: 15px 20px; background: var(--card); }
         .search-area input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--primary); background: var(--input-bg); color: var(--text); outline: none; }
-
         .tabs { display: flex; gap: 10px; overflow-x: auto; padding: 15px; scrollbar-width: none; }
-        .tabs::-webkit-scrollbar { display: none; }
-        .tab { padding: 10px 20px; background: var(--card); border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .tab { padding: 10px 20px; background: var(--card); border-radius: 20px; white-space: nowrap; font-size: 13px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.05); cursor: pointer; }
         .tab.active { background: var(--primary); color: white; }
-
         .p-card { background: var(--card); border-radius: 22px; padding: 20px; margin: 0 15px 15px; border-left: 6px solid var(--primary); box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
         .p-card.out { border-left-color: var(--danger); }
         .card-bottom { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 12px; border-radius: 18px; margin-top: 10px; }
-
         .inline-edit { background: none; border: none; color: var(--primary); font-weight: bold; width: 80px; font-size: 15px; outline: none; display: none; border-bottom: 2px solid var(--primary); }
         .pencil { font-size: 12px; color: var(--sub-text); padding: 5px; cursor: pointer; }
-
-        /* Navigation */
         .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; height: 70px; background: var(--card); border-radius: 25px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 1000; }
-        .nav-item { color: var(--sub-text); text-align: center; flex: 1; font-size: 11px; }
+        .nav-item { color: var(--sub-text); text-align: center; flex: 1; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
-        .add-btn { background: var(--primary); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; margin-top: -45px; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4); }
-
+        .add-btn { background: var(--primary); width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; margin-top: -45px; box-shadow: 0 8px 20px rgba(108, 92, 231, 0.4); cursor: pointer; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .modal { background: var(--card); width: 100%; max-width: 380px; padding: 25px; border-radius: 30px; }
         .modal input, .modal select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #ddd; background: var(--input-bg); color: var(--text); outline: none; }
-        
         .loader-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; z-index: 6000; }
         [data-theme="dark"] .loader-overlay { background: rgba(0,0,0,0.8); }
     </style>
@@ -88,8 +48,8 @@
 
     <div id="loginScreen" class="login-screen">
         <i class="fas fa-boxes-stacked" style="font-size: 60px; margin-bottom: 20px;"></i>
-        <h2 style="margin:0">Stock Manager Pro</h2>
-        <p style="opacity:0.8">ဒေတာများကို Google Cloud တွင် သိမ်းဆည်းရန်<br>အကောင့်ဝင်ပေးပါ</p>
+        <h2>Stock Manager Pro</h2>
+        <p>ဒေတာများကို Google Cloud တွင် သိမ်းဆည်းရန်<br>အကောင့်ဝင်ပေးပါ</p>
         <button class="google-btn" onclick="signInWithGoogle()">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
             Login with Google Account
@@ -101,16 +61,16 @@
     </div>
 
     <div id="appBody" style="display:none; padding-bottom: 100px;">
-        <div id="homePage" class="page active">
+        <div id="homePage" class="page">
             <div class="header">
                 <div class="shop-info">
                     <div class="logo-box"><img id="shopLogoDisplay" src=""></div>
                     <b id="displayShopName">Store Pro</b>
                 </div>
                 <div class="header-btns">
-                    <button class="lang-btn" id="langSwitcher" onclick="toggleLang()">Eng</button>
-                    <i class="fas fa-search" onclick="toggleSearch()" style="color:var(--primary); font-size:18px;"></i>
-                    <i id="themeIcon" class="fas fa-moon" onclick="toggleTheme()" style="color:var(--primary); font-size:18px;"></i>
+                    <button class="lang-btn" id="langSwitcher" onclick="toggleLang()" style="background:var(--primary); color:white; border:none; padding:5px 10px; border-radius:8px;">Eng</button>
+                    <i class="fas fa-search" onclick="toggleSearch()" style="color:var(--primary); margin:0 10px;"></i>
+                    <i id="themeIcon" class="fas fa-moon" onclick="toggleTheme()" style="color:var(--primary);"></i>
                 </div>
             </div>
             <div class="search-area" id="searchBox"><input type="text" id="searchInput" onkeyup="render()" placeholder="ရှာဖွေရန်..."></div>
@@ -119,92 +79,84 @@
         </div>
 
         <div id="settingsPage" class="page" style="display:none;">
-            <div class="header"><b id="title-settings">Settings</b></div>
+            <div class="header"><b>Settings</b></div>
             <div style="padding: 20px;">
                 <div style="background:var(--card); padding:25px; border-radius:25px;">
                     <div style="text-align:center; margin-bottom:20px;">
                         <img id="userAvatar" src="" style="width:60px; height:60px; border-radius:50%; border:2px solid var(--primary);">
                         <div id="userEmail" style="font-size:12px; color:var(--sub-text); margin-top:5px;"></div>
                     </div>
-                    <label id="label-shopname" style="font-size:12px; color:var(--sub-text);">Shop Name</label>
+                    <label style="font-size:12px; color:var(--sub-text);">Shop Name</label>
                     <input type="text" id="inputShopName" onchange="updateProfile()" style="width:100%; padding:12px; margin:10px 0 20px; border-radius:10px; border:1px solid #ddd; background:var(--input-bg); color:var(--text);">
-                    <button onclick="document.getElementById('logoInput').click()" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--primary); background:none; color:var(--primary); font-weight:bold; margin-bottom:10px; width:100%;">
-                        <i class="fas fa-camera"></i> <span id="btn-change-logo">Change Logo</span>
-                    </button>
-                    <button onclick="logout()" style="width:100%; padding:12px; border-radius:10px; border:none; background:var(--danger); color:white; font-weight:bold;">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
+                    <button onclick="document.getElementById('logoInput').click()" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--primary); background:none; color:var(--primary); font-weight:bold; margin-bottom:10px;">Change Logo</button>
+                    <button onclick="logout()" style="width:100%; padding:12px; border-radius:10px; border:none; background:var(--danger); color:white; font-weight:bold;">Logout</button>
                 </div>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" id="navHome" onclick="showPage('home')"><i class="fas fa-home" style="font-size:20px;"></i><br><span id="nav-home">Home</span></div>
+            <div class="nav-item active" id="navHome" onclick="showPage('home')"><i class="fas fa-home"></i><br>Home</div>
             <div class="add-btn" onclick="openModal()"><i class="fas fa-plus"></i></div>
-            <div class="nav-item" id="navSettings" onclick="showPage('settings')"><i class="fas fa-cog" style="font-size:20px;"></i><br><span id="nav-settings">Settings</span></div>
+            <div class="nav-item" id="navSettings" onclick="showPage('settings')"><i class="fas fa-cog"></i><br>Settings</div>
         </div>
     </div>
 
     <div class="overlay" id="addModal">
         <div class="modal">
-            <h3 id="modal-title" style="margin-top:0">Add New Product</h3>
+            <h3>Add Product</h3>
             <input type="text" id="pName" placeholder="Name">
             <input type="text" id="pPrice" placeholder="Price">
             <input type="number" id="pQty" placeholder="Quantity">
-            <select id="pCat">
-                <option value="Phone">Phone</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Service">Service</option>
-                <option value="Glass">Glass</option>
-            </select>
-            <button class="btn-save" onclick="saveProduct()" id="btn-save-text" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold;">Save</button>
-            <button onclick="closeModal()" style="width:100%; border:none; background:none; color:gray; margin-top:10px;" id="btn-cancel-text">Cancel</button>
+            <select id="pCat"><option value="Phone">Phone</option><option value="Accessories">Accessories</option><option value="Service">Service</option><option value="Glass">Glass</option></select>
+            <button onclick="saveProduct()" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold;">Save</button>
+            <button onclick="closeModal()" style="width:100%; border:none; background:none; color:gray; margin-top:10px;">Cancel</button>
         </div>
     </div>
 
     <input type="file" id="logoInput" style="display:none" accept="image/*" onchange="handleLogo(this)">
 
     <script>
-        // --- Firebase Configuration (အစ်ကို့ API Key များဖြင့် အစားထိုးပါ) ---
+        // အစ်ကို့ရဲ့ Firebase Config (ပုံ ၁၀ဝ၀ဝ၀၁၂၆၈ မှ)
         const firebaseConfig = {
-            apiKey: "AIzaSy...", 
+            apiKey: "AIzaSyCQK1Ix0B0ekzrDK8EvFPnpG-T0pZ3yY_I",
             authDomain: "my-shop-manegar.firebaseapp.com",
-            databaseURL: "https://my-shop-manegar-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            databaseURL: "https://my-shop-manegar-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "my-shop-manegar",
-            storageBucket: "my-shop-manegar.appspot.com",
-            messagingSenderId: "...",
-            appId: "..."
+            storageBucket: "my-shop-manegar.firebasestorage.app",
+            messagingSenderId: "439209315031",
+            appId: "1:439209315031:web:cec1c00a52655e51ef7e92",
+            measurementId: "G-D5CNNQTGFE"
         };
-        firebase.initializeApp(firebaseConfig);
 
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
         let dbRef;
         let db = {};
-        let profile = JSON.parse(localStorage.getItem('pro_profile')) || { name: 'Smart Store', logo: 'https://via.placeholder.com/150' };
         let currentCat = 'All';
         let currentLang = localStorage.getItem('app_lang') || 'my';
+        let profile = JSON.parse(localStorage.getItem('pro_profile')) || { name: 'Smart Store', logo: 'https://via.placeholder.com/150' };
 
-        const langData = {
-            my: { home: "ပင်မ", settings: "ဆက်တင်", shopName: "ဆိုင်အမည်", reset: "အချက်အလက်ဖျက်ရန်", changeLogo: "Logo ပြောင်းရန်", save: "သိမ်းမည်", cancel: "မလုပ်တော့ပါ", addTitle: "ပစ္စည်းအသစ်ထည့်ရန်", search: "ရှာဖွေရန်...", stock: "လက်ကျန်", all: "အားလုံး", out: "ကုန်ပြီ", lang: "Eng" },
-            en: { home: "Home", settings: "Settings", shopName: "Shop Name", reset: "Reset All Data", changeLogo: "Change Logo", save: "Save", cancel: "Cancel", addTitle: "Add New Product", search: "Search...", stock: "Stock", all: "All", out: "Out", lang: "မြန်မာ" }
-        };
+        // --- Google Login Function ---
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+            .then((result) => { console.log("Login Success"); })
+            .catch((error) => { alert("Error: " + error.message); });
+        }
 
-        // --- Auth & Sync ---
+        function logout() { if(confirm("Logout လုပ်မှာလား?")) auth.signOut().then(() => location.reload()); }
+
+        // --- Auth State ---
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appBody').style.display = 'block';
-                document.getElementById('mainLoader').style.display = 'flex';
                 document.getElementById('userAvatar').src = user.photoURL;
                 document.getElementById('userEmail').innerText = user.email;
-                
-                // User တစ်ယောက်ချင်းစီအတွက် Cloud Folder ဆောက်ခြင်း
                 dbRef = database.ref("users/" + user.uid + "/stock_data");
-                
                 dbRef.on('value', snapshot => {
                     db = snapshot.val() || {};
-                    document.getElementById('mainLoader').style.display = 'none';
                     render();
                 });
             } else {
@@ -213,14 +165,7 @@
             }
         });
 
-        function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(e => alert(e.message));
-        }
-
-        function logout() { if(confirm("Logout လုပ်မှာလား?")) auth.signOut().then(() => location.reload()); }
-
-        // --- Functions ---
+        // --- Business Logic ---
         function saveProduct() {
             const id = Date.now();
             const data = {
@@ -230,9 +175,10 @@
                 cat: document.getElementById('pCat').value
             };
             if(data.name && data.price && dbRef) {
-                dbRef.child(id).set(data);
-                closeModal();
-                ['pName', 'pPrice', 'pQty'].forEach(i => document.getElementById(i).value = '');
+                dbRef.child(id).set(data).then(() => {
+                    closeModal();
+                    ['pName', 'pPrice', 'pQty'].forEach(i => document.getElementById(i).value = '');
+                });
             }
         }
 
@@ -249,32 +195,25 @@
         }
 
         function render() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
             const list = document.getElementById('productList');
-            const t = langData[currentLang];
             list.innerHTML = "";
-            
             Object.keys(db).reverse().forEach(id => {
                 const item = db[id];
-                let matchCat = (currentCat === 'All' || item.cat === currentCat);
-                if(currentCat === 'Out') matchCat = (item.qty <= 0);
-
-                if(matchCat && item.name.toLowerCase().includes(search)) {
+                if ((currentCat === 'All' || item.cat === currentCat) || (currentCat === 'Out' && item.qty <= 0)) {
                     list.innerHTML += `
                     <div class="p-card ${item.qty <= 0 ? 'out' : ''}">
-                        <div style="display:flex; justify-content:space-between; align-items:start;">
-                            <div><div style="font-weight:bold; font-size:17px;">${item.name}</div><small style="color:var(--sub-text);"># ${item.cat}</small></div>
-                            <i class="fas fa-trash-alt" style="color:#ddd; cursor:pointer" onclick="if(confirm('ဖျက်မှာလား?')) dbRef.child('${id}').remove()"></i>
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>${item.name}</b>
+                            <i class="fas fa-trash-alt" style="color:#ddd" onclick="if(confirm('ဖျက်မှာလား?')) dbRef.child('${id}').remove()"></i>
                         </div>
                         <div class="card-bottom">
-                            <div style="display:flex; align-items:center; gap:5px;">
-                                <span class="val-display" id="price-display-${id}" style="color:var(--primary); font-weight:bold;">${item.price}</span>
+                            <div>
+                                <span id="price-display-${id}">${item.price}</span>
                                 <input type="text" class="inline-edit" id="price-input-${id}" value="${item.price}" onblur="toggleEdit('${id}', 'price')">
                                 <i class="fas fa-pencil-alt pencil" onclick="toggleEdit('${id}', 'price')"></i>
                             </div>
-                            <div style="display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.05); padding:5px 10px; border-radius:10px;">
-                                <small>${t.stock}:</small>
-                                <span class="val-display" id="qty-display-${id}" style="font-weight:bold;">${item.qty}</span>
+                            <div>
+                                <span>Qty: <b id="qty-display-${id}">${item.qty}</b></span>
                                 <input type="number" class="inline-edit" id="qty-input-${id}" value="${item.qty}" onblur="toggleEdit('${id}', 'qty')" style="width:40px;">
                                 <i class="fas fa-pencil-alt pencil" onclick="toggleEdit('${id}', 'qty')"></i>
                             </div>
@@ -286,80 +225,51 @@
         }
 
         function renderTabs() {
-            const t = langData[currentLang];
-            const cats = [t.all, 'Phone', 'Accessories', 'Service', 'Glass', t.out];
-            const vals = ['All', 'Phone', 'Accessories', 'Service', 'Glass', 'Out'];
+            const cats = ['All', 'Phone', 'Accessories', 'Service', 'Glass', 'Out'];
             let html = '';
-            cats.forEach((c, i) => {
-                html += `<div class="tab ${currentCat === vals[i] ? 'active' : ''}" onclick="currentCat='${vals[i]}'; render();">${c}</div>`;
+            cats.forEach(c => {
+                html += `<div class="tab ${currentCat === c ? 'active' : ''}" onclick="currentCat='${c}'; render();">${c}</div>`;
             });
             document.getElementById('tabList').innerHTML = html;
         }
 
-        function applyLang() {
-            const t = langData[currentLang];
-            document.getElementById('nav-home').innerText = t.home;
-            document.getElementById('nav-settings').innerText = t.settings;
-            document.getElementById('title-settings').innerText = t.settings;
-            document.getElementById('label-shopname').innerText = t.shopName;
-            document.getElementById('btn-change-logo').innerText = t.changeLogo;
-            document.getElementById('modal-title').innerText = t.addTitle;
-            document.getElementById('btn-save-text').innerText = t.save;
-            document.getElementById('btn-cancel-text').innerText = t.cancel;
-            document.getElementById('langSwitcher').innerText = t.lang;
-            renderTabs();
-        }
-
-        function toggleLang() {
-            currentLang = currentLang === 'my' ? 'en' : 'my';
-            localStorage.setItem('app_lang', currentLang);
-            applyLang(); render();
-        }
-
         function showPage(p) {
             document.querySelectorAll('.page').forEach(pg => pg.style.display = 'none');
-            document.querySelectorAll('.nav-item').forEach(ni => ni.classList.remove('active'));
             document.getElementById(p + 'Page').style.display = 'block';
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('nav' + p.charAt(0).toUpperCase() + p.slice(1)).classList.add('active');
         }
 
+        function openModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('addModal').style.display = 'none'; }
         function toggleTheme() {
             const theme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('app_theme', theme);
             document.getElementById('themeIcon').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-
         function toggleSearch() {
-            const box = document.getElementById('searchBox');
-            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+            const s = document.getElementById('searchBox');
+            s.style.display = s.style.display === 'block' ? 'none' : 'block';
         }
-
         function updateProfile() {
             profile.name = document.getElementById('inputShopName').value || profile.name;
-            localStorage.setItem('pro_profile', JSON.stringify(profile));
             document.getElementById('displayShopName').innerText = profile.name;
-            document.getElementById('shopLogoDisplay').src = profile.logo;
+            localStorage.setItem('pro_profile', JSON.stringify(profile));
         }
-
         function handleLogo(input) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     profile.logo = e.target.result;
+                    document.getElementById('shopLogoDisplay').src = profile.logo;
                     updateProfile();
                 };
                 reader.readAsDataURL(file);
             }
         }
-
-        function openModal() { document.getElementById('addModal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('addModal').style.display = 'none'; }
-
-        // Initialization
-        if(localStorage.getItem('app_theme') === 'dark') toggleTheme();
-        applyLang(); updateProfile();
+        document.getElementById('displayShopName').innerText = profile.name;
+        document.getElementById('shopLogoDisplay').src = profile.logo;
     </script>
 </body>
 </html>
